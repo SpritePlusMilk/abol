@@ -18,7 +18,7 @@ def get_size(resolution: str) -> tuple[int, int]:
     return width, height
 
 
-def create_image(file: 'TemporaryUploadedFile', resolution: str = RESOLUTION_MEDIUM) -> Image:
+def process_image(file: 'TemporaryUploadedFile', resolution: str = RESOLUTION_MEDIUM) -> Image:
     file_name, extension = os.path.splitext(file.name)
     same_name_count = Image_.objects.filter(name__startswith=file_name, name__endswith=extension).count()
     image_name = f'{file_name} ({same_name_count}){extension}' if same_name_count else file.name
