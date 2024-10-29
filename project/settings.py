@@ -1,5 +1,7 @@
+from os import getenv
 from pathlib import Path
 
+# Основные настройки Django
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-6lpxm23l!*9q2froel8$+&^^1fgca3k2t7kj*5)s**89s10d7e'
@@ -30,20 +32,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-}
-
-SPECTACULAR_SETTINGS = {
-    'SWAGGER_UI_DIST': 'SIDECAR',
-    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
-    'REDOC_DIST': 'SIDECAR',
-    'TITLE': 'Тестовое задание',
-    'DESCRIPTION': 'Swagger',
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
-}
 
 ROOT_URLCONF = 'project.urls'
 
@@ -99,3 +87,28 @@ STATIC_URL = 'static/'
 STATIC_ROOT = 'static_root/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Настройки DRF
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# Настройки drf-spectacular
+SPECTACULAR_SETTINGS = {
+    'SWAGGER_UI_DIST': 'SIDECAR',
+    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    'REDOC_DIST': 'SIDECAR',
+    'TITLE': 'Тестовое задание',
+    'DESCRIPTION': 'Swagger',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
+
+MQ_HOST = getenv('MQ_HOST', '0.0.0.0')
+MQ_PORT = int(getenv('MQ_PORT', 5672))
+
+MQ_USER = getenv('MQ_USER', 'guest')
+MQ_PASS = getenv('MQ_PASS', 'guest')
+
+MQ_EXCHANGE = getenv('MQ_EXCHANGE', '')
+MQ_ROUTING_KEY = getenv('MQ_ROUTING_KEY', 'messages')
