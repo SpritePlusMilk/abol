@@ -1,0 +1,40 @@
+exclude = [
+    '.cache/*',
+    '.venv',
+    'venv',
+    'migrations',
+    'manage.py',
+    '__init__.py',
+]
+
+line-length = 120
+indent-width = 4
+target-version = 'py312'
+
+[lint]
+select = [  # https://docs.astral.sh/ruff/rules/
+    'E',  # pycodestyle errors
+    'W',  # pycodestyle warnings
+    'F',  # pyflakes
+    'I',  # isort
+    'Q',  # quotes
+    'TID',  # tidy imports
+    'ANN',  # annotations
+    'DJ',  # django
+    'B',  # bugbear
+    'SIM',  # simplify
+]
+ignore = ['B904', 'DJ008', 'DJ001', 'B905']
+#fixable = []
+preview = true
+
+[lint.flake8-quotes]
+inline-quotes = 'single'
+
+[format]
+quote-style = 'single'
+
+[lint.isort]
+split-on-trailing-comma = true
+combine-as-imports = true
+known-third-party = ['PIL', 'aiohttp', 'asgiref', 'celery', 'constance', 'cv2', 'dadata', 'django', 'django_filters', 'dotenv', 'factory', 'faker', 'markdown2', 'pytz', 'requests', 'rest_framework', 'sentry_sdk', 'smpplib', 'socketio']
