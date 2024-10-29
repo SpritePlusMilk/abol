@@ -92,7 +92,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Настройки DRF
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'DEFAULT_AUTHENTICATION_CLASSES': 'rest_framework_simplejwt.authentication.JWTAuthentication'
+    'DEFAULT_AUTHENTICATION_CLASSES': 'rest_framework_simplejwt.authentication.JWTAuthentication',
 }
 
 # Настройки drf-spectacular
