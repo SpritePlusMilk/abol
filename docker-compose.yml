@@ -1,0 +1,29 @@
+services:
+  web:
+    build: .
+    expose:
+      - 8000
+    env_file:
+      - .project-env
+      - .mq-env
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+
+  rabbitmq:
+    image: "rabbitmq:latest"
+
+  image_processing:
+    build: ./image_processing
+    env_file:
+      - .mq-env
+    depends_on:
+      - web
+      - rabbitmq
+
+  redis:
+    image: "redis/redis-stack:latest"

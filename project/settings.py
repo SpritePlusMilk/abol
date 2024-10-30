@@ -4,11 +4,11 @@ from pathlib import Path
 # Основные настройки Django
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-6lpxm23l!*9q2froel8$+&^^1fgca3k2t7kj*5)s**89s10d7e'
+SECRET_KEY = getenv('SECRET_KEY', 'secret_key')
 
-DEBUG = True
+DEBUG = bool(getenv('DEBUG', 1))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ALLOWED_HOSTS.split(' ') if (ALLOWED_HOSTS := getenv('ALLOWED_HOSTS')) else ['127.0.0.1']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -26,6 +26,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -92,7 +93,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Настройки DRF
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'DEFAULT_AUTHENTICATION_CLASSES': 'rest_framework_simplejwt.authentication.JWTAuthentication',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
 }
 
 # Настройки drf-spectacular
@@ -106,7 +110,7 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
 }
 
-MQ_HOST = getenv('MQ_HOST', '0.0.0.0')
+MQ_HOST = getenv('MQ_HOST', 'rabbitmq')
 MQ_PORT = int(getenv('MQ_PORT', 5672))
 
 MQ_USER = getenv('MQ_USER', 'guest')

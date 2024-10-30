@@ -1,0 +1,5 @@
+.github/
+.gitignore
+.venv/
+images/
+image_processing/
