@@ -1,5 +1,7 @@
 .github/
 .gitignore
 .venv/
+.ruff_cache
 images/
 image_processing/
+*.sqlite3
