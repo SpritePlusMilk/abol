@@ -44,6 +44,7 @@ htmlcov/
 .nox/
 .coverage
 .coverage.*
+.coveragerc
 .cache
 nosetests.xml
 coverage.xml
@@ -73,7 +74,7 @@ ipython_config.py
 __pypackages__/
 
 # Environments
-.project-env
+env/.project-env
 .venv
 env/
 venv/

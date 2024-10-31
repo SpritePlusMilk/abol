@@ -35,6 +35,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://redis:6379/1',
+        'OPTIONS': {'CLIENT_CLASS': 'django_redis.client.DefaultClient'},
+    }
+}
+
 ROOT_URLCONF = 'project.urls'
 
 TEMPLATES = [
@@ -110,6 +118,10 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
 }
 
+# Настройка брокера для Celery
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+
+# Настройки подключения к RabbitMQ
 MQ_HOST = getenv('MQ_HOST', 'rabbitmq')
 MQ_PORT = int(getenv('MQ_PORT', 5672))
 

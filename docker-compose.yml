@@ -1,11 +1,20 @@
 services:
+  redis:
+    image: "redis/redis-stack:latest"
+
+  rabbitmq:
+    image: "rabbitmq:4.0.3-management"
+
   web:
     build: .
     expose:
       - 8000
     env_file:
-      - .project-env
-      - .mq-env
+      - env/.project-env
+      - env/.mq-env
+    depends_on:
+      - rabbitmq
+      - redis
 
   nginx:
     build: ./nginx
@@ -14,16 +23,10 @@ services:
     depends_on:
       - web
 
-  rabbitmq:
-    image: "rabbitmq:latest"
-
   image_processing:
     build: ./image_processing
     env_file:
-      - .mq-env
+      - env/.mq-env
     depends_on:
       - web
       - rabbitmq
-
-  redis:
-    image: "redis/redis-stack:latest"
