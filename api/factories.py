@@ -16,7 +16,6 @@ class User(factory.django.DjangoModelFactory):
     email = factory.Sequence(lambda n: factory_ru.email())
     first_name = factory.Sequence(lambda n: factory_ru.first_name())
     last_name = factory.Sequence(lambda n: factory_ru.last_name())
-    password = factory.Sequence(lambda n: factory_ru.word())
 
     class Meta:
         model = User
@@ -24,7 +23,7 @@ class User(factory.django.DjangoModelFactory):
 
 class Image(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: factory_ru.word())
-    file = factory.django.FileField()
+    file = factory.django.ImageField()
     upload_dt = fuzzy.FuzzyDate(datetime(2024, 1, 1), datetime(2024, 12, 31))
     resolution = fuzzy.FuzzyChoice(i[0] for i in RESOLUTION_CHOICES)
     size = fuzzy.FuzzyInteger(1, 1000)

@@ -14,8 +14,9 @@ def get_connection() -> BlockingConnection:
 
 
 def produce_message(message: str) -> None:
-    with get_connection() as connection, connection.channel() as channel:
-        channel.queue_declare(queue=settings.MQ_ROUTING_KEY)
-        channel.basic_publish(
-            exchange=settings.MQ_EXCHANGE, routing_key=settings.MQ_ROUTING_KEY, body=str.encode(message)
-        )
+    if not settings.DEBUG:
+        with get_connection() as connection, connection.channel() as channel:
+            channel.queue_declare(queue=settings.MQ_ROUTING_KEY)
+            channel.basic_publish(
+                exchange=settings.MQ_EXCHANGE, routing_key=settings.MQ_ROUTING_KEY, body=str.encode(message)
+            )
