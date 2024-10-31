@@ -1,3 +1,5 @@
+"""Файл с констанами приложения"""
+
 IMAGE_STORE_PATH = 'images/'
 
 RESOLUTION_SMALL = '100x100'

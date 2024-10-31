@@ -8,6 +8,7 @@ from project.celery import app
 
 
 def run_task(task: Callable, *args: list, **kwargs: dict) -> Any:  # noqa
+    """Функция общего назначения для запуска Celery задач"""
     delay_time = kwargs.pop('delay_time', None)
     if settings.DEBUG:
         # выполнение задачи без celery
@@ -18,4 +19,5 @@ def run_task(task: Callable, *args: list, **kwargs: dict) -> Any:  # noqa
 
 @app.task
 def process_image_task(image: Image) -> None:
+    """Celery задача для обработки изображений"""
     process_image(image)

@@ -1,3 +1,6 @@
+import os
+import shutil
+
 from django.test.utils import override_settings
 from django.urls import reverse
 from faker import Factory
@@ -9,6 +12,7 @@ from api import factories, serializers
 from api.models import Image
 
 factory_ru = Factory.create(locale='ru_Ru')
+MEDIA_ROOT = 'api/test/test_images'
 
 
 def create_image_data(valid: bool = True) -> dict:
@@ -21,6 +25,7 @@ def create_image_data(valid: bool = True) -> dict:
 
 
 class TestApi(APITestCase):
+    @override_settings(MEDIA_ROOT=MEDIA_ROOT)
     def setUp(self) -> None:
         self.password = factory_ru.password()
         self.user = factories.User()
@@ -46,7 +51,7 @@ class TestApi(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    @override_settings(DEBUG=True)
+    @override_settings(DEBUG=True, MEDIA_ROOT=MEDIA_ROOT)
     def test_detail(self) -> None:
         url = reverse('api:images-detail', kwargs={'pk': self.image.pk})
         response = self.client.get(url)
@@ -55,6 +60,7 @@ class TestApi(APITestCase):
         self.assertEqual(response.data['id'], self.image.id)
         self.assertEqual(response.data['name'], self.image.name)
 
+    @override_settings(MEDIA_ROOT=MEDIA_ROOT)
     def test_detail_unauthorized(self) -> None:
         self.client.credentials(HTTP_AUTHORIZATION='')
         url = reverse('api:images-detail', kwargs={'pk': self.image.pk})
@@ -62,7 +68,7 @@ class TestApi(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    @override_settings(DEBUG=True)
+    @override_settings(DEBUG=True, MEDIA_ROOT=MEDIA_ROOT)
     def test_create(self) -> None:
         url = reverse('api:images-list')
         data = create_image_data()
@@ -74,6 +80,7 @@ class TestApi(APITestCase):
         self.assertEqual(response.data['name'], data['name'])
         self.assertEqual(response.data['resolution'], data['resolution'])
 
+    @override_settings(MEDIA_ROOT=MEDIA_ROOT)
     def test_create_unauthorized(self) -> None:
         self.client.credentials(HTTP_AUTHORIZATION='')
         url = reverse('api:images-list')
@@ -81,7 +88,7 @@ class TestApi(APITestCase):
         response = self.client.post(url, create_image_data())
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    @override_settings(DEBUG=True)
+    @override_settings(DEBUG=True, MEDIA_ROOT=MEDIA_ROOT)
     def test_create_invalid_file_type(self) -> None:
         url = reverse('api:images-list')
         data = create_image_data(valid=False)
@@ -89,7 +96,7 @@ class TestApi(APITestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    @override_settings(DEBUG=True)
+    @override_settings(DEBUG=True, MEDIA_ROOT=MEDIA_ROOT)
     def test_update(self) -> None:
         url = reverse('api:images-detail', kwargs={'pk': self.image.pk})
         data = create_image_data()
@@ -100,6 +107,7 @@ class TestApi(APITestCase):
         self.assertEqual(response.data['name'], data['name'])
         self.assertEqual(response.data['resolution'], data['resolution'])
 
+    @override_settings(MEDIA_ROOT=MEDIA_ROOT)
     def test_update_unauthorized(self) -> None:
         self.client.credentials(HTTP_AUTHORIZATION='')
         url = reverse('api:images-detail', kwargs={'pk': self.image.pk})
@@ -107,7 +115,7 @@ class TestApi(APITestCase):
         response = self.client.put(url, create_image_data())
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    @override_settings(DEBUG=True)
+    @override_settings(DEBUG=True, MEDIA_ROOT=MEDIA_ROOT)
     def test_partial_update(self) -> None:
         image_before_update = serializers.ImageRead(self.image).data
         url = reverse('api:images-detail', kwargs={'pk': self.image.pk})
@@ -120,6 +128,7 @@ class TestApi(APITestCase):
         self.assertEqual(response.data['name'], data['name'])
         self.assertEqual(response.data['resolution'], image_before_update['resolution'])
 
+    @override_settings(MEDIA_ROOT=MEDIA_ROOT)
     def test_partial_update_unauthorized(self) -> None:
         self.client.credentials(HTTP_AUTHORIZATION='')
         url = reverse('api:images-detail', kwargs={'pk': self.image.pk})
@@ -142,3 +151,7 @@ class TestApi(APITestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(Image.objects.count(), self.initial_image_count)
+
+    def tearDown(self) -> None:
+        if os.path.exists(MEDIA_ROOT):
+            shutil.rmtree(MEDIA_ROOT)

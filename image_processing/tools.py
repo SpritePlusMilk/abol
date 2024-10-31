@@ -31,6 +31,7 @@ def process_message(
     properties: 'BasicProperties',
     body: bytes,
 ) -> None:
+    """Callback для логирования сообщения"""
     message = body.decode()
     print(message)
     logger.info(message)
@@ -38,5 +39,6 @@ def process_message(
 
 
 def consume_message(channel: 'Channel') -> None:
+    """Функция для приёма сообщения"""
     channel.basic_consume(queue=settings.MQ_ROUTING_KEY, on_message_callback=process_message)
     channel.start_consuming()

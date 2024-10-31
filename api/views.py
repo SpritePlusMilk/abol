@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING, Type
 
-from django.core.cache import cache
 from django.conf import settings
+from django.core.cache import cache
 from django.utils.timezone import now
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
