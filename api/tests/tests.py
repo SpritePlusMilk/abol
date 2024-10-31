@@ -46,6 +46,7 @@ class TestApi(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    @override_settings(DEBUG=True)
     def test_detail(self) -> None:
         url = reverse('api:images-detail', kwargs={'pk': self.image.pk})
         response = self.client.get(url)
