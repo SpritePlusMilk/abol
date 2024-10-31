@@ -1,7 +1,8 @@
 .github/
 .gitignore
 .venv/
-.ruff_cache
+.ruff_cache/
+.pytest_cache/
 images/
 image_processing/
 *.sqlite3
