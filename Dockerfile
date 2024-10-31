@@ -12,5 +12,7 @@ COPY supervisor/serv.conf /etc/supervisor/conf.d/app.conf
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
-CMD python manage.py migrate && python manage.py collectstatic --noinput
-CMD /usr/bin/supervisord -c /etc/supervisor/supervisord.conf --nodaemon
+EXPOSE 8000
+CMD python manage.py collectstatic --noinput && python manage.py migrate && \
+    gunicorn project.wsgi:application --bind 0.0.0.0:8000; \
+    /usr/bin/supervisord -c /etc/supervisor/supervisord.conf --nodaemon

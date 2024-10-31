@@ -2,8 +2,8 @@ from typing import TYPE_CHECKING, Type
 
 from django.core.cache import cache
 from django.utils.timezone import now
-from django.views.decorators.cache import cache_page
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
@@ -26,9 +26,9 @@ class ImageViewSet(ModelViewSet):
             return ImageWrite
         return ImageRead
 
-    def retrieve(self, request, *args, **kwargs):
+    def retrieve(self, request: Request, *args: list, **kwargs: dict) -> Response:
         pk = kwargs.get('pk')
-        cache_key = f"image_detail_{pk}"
+        cache_key = f'image_detail_{pk}'
 
         if data := cache.get(cache_key):
             return Response(data)

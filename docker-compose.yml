@@ -5,16 +5,27 @@ services:
   rabbitmq:
     image: "rabbitmq:4.0.3-management"
 
+  postgres:
+    image: postgres:17
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - env/.db-env
+    ports:
+      - "5432:5432"
+
   web:
     build: .
-    expose:
-      - 8000
     env_file:
       - env/.project-env
       - env/.mq-env
+      - env/.db-env
     depends_on:
+      - postgres
       - rabbitmq
       - redis
+    links:
+      - postgres:postgres
 
   nginx:
     build: ./nginx
@@ -30,3 +41,6 @@ services:
     depends_on:
       - web
       - rabbitmq
+
+volumes:
+  postgres_data:

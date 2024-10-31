@@ -63,12 +63,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'project.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if getenv('DB_ENGINE'):
+    DATABASES = {
+        'default': {
+            'ENGINE': getenv('DB_ENGINE', 'django.db.backends.sqlite3'),
+            'NAME': getenv('POSTGRES_DB', BASE_DIR / 'db.sqlite3'),
+            'USER': getenv('POSTGRES_USER', 'testuser'),
+            'PASSWORD': getenv('POSTGRES_PASSWORD', 'password'),
+            'HOST': getenv('POSTGRES_HOST', 'localhost'),
+            'PORT': int(getenv('POSTGRES_PORT', '5432')),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        },
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -119,7 +131,7 @@ SPECTACULAR_SETTINGS = {
 }
 
 # Настройка брокера для Celery
-CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_BROKER_URL = 'redis://redis:6379/2'
 
 # Настройки подключения к RabbitMQ
 MQ_HOST = getenv('MQ_HOST', 'rabbitmq')
