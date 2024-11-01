@@ -41,5 +41,27 @@
 В случае, если миграции не применились использовать:
 - `docker exec -ti abol-web-1 python manage.py migrate --noinput`
 
+## ENV
 
+.db-env
+* DB_ENGINE=django.db.backends.postgresql_psycopg2
+* POSTGRES_USER=testuser
+* POSTGRES_DB=testdb
+* POSTGRES_PASSWORD=password
+* POSTGRES_HOST=postgres
+* POSTGRES_PORT=5432
+* PGDATA=/var/lib/postgresql/data/
+* C_FORCE_ROOT=true
+
+.project-env
+* DEBUG = 1
+* ALLOWED_HOSTS = 127.0.0.1 localhost [::1]
+* SECRET_KEY = django-insecure-6lpxm23l!*9q2froel8$+&^^1fgca3k2t7kj*5)s**89s10d7e
+
+.mq-env
+* MQ_HOST = rabbitmq
+* MQ_PORT = 5672
+* MQ_USER = guest
+* MQ_PASS = guest
+* MQ_ROUTING_KEY = messages
 
